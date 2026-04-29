@@ -1,0 +1,13 @@
+bin/
+obj/
+.vs/
+.claude/
+*.user
+*.suo
+*.cache
+*.log
+[Dd]ebug/
+[Rr]elease/
+TestResults/
+.idea/
+*.DotSettings.user
