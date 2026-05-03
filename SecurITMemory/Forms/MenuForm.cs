@@ -24,5 +24,11 @@ public partial class MenuForm : Form
             _taillePlateau = options.TailleChoisie;
     }
 
+    private void btnScores_Click(object sender, EventArgs e)
+    {
+        using var scores = new ScoresForm();
+        scores.ShowDialog(this);
+    }
+
     private void btnQuitter_Click(object sender, EventArgs e) => Close();
 }

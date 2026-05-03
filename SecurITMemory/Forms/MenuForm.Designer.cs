@@ -7,6 +7,7 @@ partial class MenuForm
     private Label lblSousTitre;
     private Button btnJouer;
     private Button btnOptions;
+    private Button btnScores;
     private Button btnQuitter;
 
     protected override void Dispose(bool disposing)
@@ -21,6 +22,7 @@ partial class MenuForm
         lblSousTitre = new Label();
         btnJouer = new Button();
         btnOptions = new Button();
+        btnScores = new Button();
         btnQuitter = new Button();
         SuspendLayout();
 
@@ -36,22 +38,26 @@ partial class MenuForm
         lblSousTitre.AutoSize = true;
         lblSousTitre.Location = new Point(85, 120);
 
-        StyliserBouton(btnJouer, "Jouer", 200);
+        StyliserBouton(btnJouer, "Jouer", 180);
         btnJouer.Click += btnJouer_Click;
 
-        StyliserBouton(btnOptions, "Options", 270);
+        StyliserBouton(btnOptions, "Options", 245);
         btnOptions.Click += btnOptions_Click;
 
-        StyliserBouton(btnQuitter, "Quitter", 340);
+        StyliserBouton(btnScores, "Scores", 310);
+        btnScores.Click += btnScores_Click;
+
+        StyliserBouton(btnQuitter, "Quitter", 375);
         btnQuitter.Click += btnQuitter_Click;
 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(560, 460);
+        ClientSize = new Size(560, 480);
         Controls.Add(lblTitre);
         Controls.Add(lblSousTitre);
         Controls.Add(btnJouer);
         Controls.Add(btnOptions);
+        Controls.Add(btnScores);
         Controls.Add(btnQuitter);
         BackColor = Color.FromArgb(20, 18, 38);
         Text = "SecurIT Memory";
