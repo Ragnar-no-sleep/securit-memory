@@ -147,12 +147,61 @@ public partial class JeuForm : Form
     {
         _chronometre.Stop();
         var ecoule = DateTime.Now - _debutPartie;
+
+        string nom = DemanderNomJoueur();
+        Leaderboard.Ajouter(new Score
+        {
+            Joueur = string.IsNullOrWhiteSpace(nom) ? "Anonyme" : nom.Trim(),
+            TaillePlateau = _jeu.TaillePlateau,
+            Essais = _jeu.NombreEssais,
+            TempsSecondes = (int)ecoule.TotalSeconds
+        });
+
         MessageBox.Show(
-            $"Bravo ! Toutes les paires sont trouvées.\n\nTemps : {ecoule:mm\\:ss}\nEssais : {_jeu.NombreEssais}",
+            $"Bravo ! Toutes les paires sont trouvées.\n\nTemps : {ecoule:mm\\:ss}\nEssais : {_jeu.NombreEssais}\n\nScore enregistré.",
             "Victoire",
             MessageBoxButtons.OK,
             MessageBoxIcon.Information);
         Close();
+    }
+
+    // Mini boîte de dialogue pour saisir le nom du joueur (sans dépendance externe).
+    private static string DemanderNomJoueur()
+    {
+        using var dialog = new Form
+        {
+            Text = "Votre nom",
+            ClientSize = new Size(320, 130),
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            StartPosition = FormStartPosition.CenterParent,
+            MaximizeBox = false,
+            MinimizeBox = false,
+            BackColor = Color.FromArgb(20, 18, 38)
+        };
+        var label = new Label
+        {
+            Text = "Entrez votre nom :",
+            Location = new Point(20, 15),
+            AutoSize = true,
+            ForeColor = Color.Gainsboro,
+            Font = new Font("Segoe UI", 10F)
+        };
+        var textBox = new TextBox { Location = new Point(20, 45), Size = new Size(280, 25) };
+        var ok = new Button
+        {
+            Text = "OK",
+            DialogResult = DialogResult.OK,
+            Location = new Point(220, 80),
+            Size = new Size(80, 30),
+            BackColor = Color.FromArgb(95, 75, 180),
+            ForeColor = Color.White,
+            FlatStyle = FlatStyle.Flat
+        };
+        ok.FlatAppearance.BorderSize = 0;
+        dialog.Controls.AddRange(new Control[] { label, textBox, ok });
+        dialog.AcceptButton = ok;
+        dialog.ShowDialog();
+        return textBox.Text;
     }
 
     protected override void OnFormClosed(FormClosedEventArgs e)
