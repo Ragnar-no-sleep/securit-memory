@@ -205,9 +205,10 @@ public partial class JeuForm : Form
 
             return null;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            MessageBox.Show($"Erreur image {cheminRelatif}: {ex.Message}");
+            // Echec silencieux : on prefere une carte sans image plutot
+            // qu'une popup au milieu de la partie.
             return null;
         }
     }
