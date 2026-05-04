@@ -53,17 +53,36 @@ public partial class JeuForm : Form
 
         foreach (var carte in _jeu.Cartes)
         {
+            var container = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Padding = new Padding(8),
+                BackColor = Color.Transparent
+            };
+
             var pb = new PictureBox
             {
                 Dock = DockStyle.Fill,
-                Margin = new Padding(4),
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.FromArgb(50, 45, 95),
-                Cursor = Cursors.Hand
+                BackColor = Color.FromArgb(45, 40, 80),
+                Cursor = Cursors.Hand,
+                BorderStyle = BorderStyle.None
             };
+
+            // Effet de bordure via le panel parent
+            container.Paint += (s, e) => {
+                var rect = container.ClientRectangle;
+                rect.Inflate(-4, -4);
+                ControlPaint.DrawBorder(e.Graphics, rect, Color.FromArgb(100, 90, 150), ButtonBorderStyle.Solid);
+            };
+
             pb.Click += Carte_Click;
+            pb.MouseEnter += (s, e) => { if (_liaisons[pb].Etat == EtatCarte.Cachee) pb.BackColor = Color.FromArgb(60, 55, 110); };
+            pb.MouseLeave += (s, e) => { if (_liaisons[pb].Etat == EtatCarte.Cachee) pb.BackColor = Color.FromArgb(45, 40, 80); };
+
             _liaisons[pb] = carte;
-            panelGrille.Controls.Add(pb);
+            container.Controls.Add(pb);
+            panelGrille.Controls.Add(container);
             AfficherCarte(pb, carte);
         }
 
@@ -83,6 +102,7 @@ public partial class JeuForm : Form
 
         if (resultat == ResultatSelection.PaireTrouvee)
         {
+            System.Media.SystemSounds.Asterisk.Play(); // Petit son de succès
             RafraichirToutesLesCartes();
             if (_jeu.EstTermine) AfficherVictoire();
         }
@@ -114,23 +134,51 @@ public partial class JeuForm : Form
 
         pb.Image = ChargerImage(chemin);
 
-        pb.BackColor = carte.Etat switch
+        switch (carte.Etat)
         {
-            EtatCarte.Trouvee => Color.FromArgb(60, 130, 90),
-            EtatCarte.Revelee => Color.FromArgb(120, 100, 200),
-            _ => Color.FromArgb(50, 45, 95)
-        };
+            case EtatCarte.Trouvee:
+                pb.BackColor = Color.FromArgb(40, 110, 70);
+                pb.Cursor = Cursors.Default;
+                break;
+            case EtatCarte.Revelee:
+                pb.BackColor = Color.FromArgb(80, 70, 160);
+                pb.Cursor = Cursors.Default;
+                break;
+            case EtatCarte.Cachee:
+                pb.BackColor = Color.FromArgb(45, 40, 80);
+                pb.Cursor = Cursors.Hand;
+                break;
+        }
     }
+
+    private static readonly Dictionary<string, Image> _imageCache = new();
 
     private static Image? ChargerImage(string cheminRelatif)
     {
+        if (_imageCache.TryGetValue(cheminRelatif, out var img))
+            return img;
+
         try
         {
-            string chemin = Path.Combine(AppContext.BaseDirectory, cheminRelatif);
-            return File.Exists(chemin) ? Image.FromFile(chemin) : null;
+            string cheminNettoye = cheminRelatif.Replace('/', Path.DirectorySeparatorChar);
+            
+            // Cherche d'abord dans le répertoire de l'exécutable
+            string chemin = Path.Combine(Application.StartupPath, cheminNettoye);
+            if (!File.Exists(chemin))
+                chemin = Path.Combine(Environment.CurrentDirectory, cheminNettoye);
+
+            if (File.Exists(chemin))
+            {
+                var loaded = Image.FromFile(chemin);
+                _imageCache[cheminRelatif] = loaded;
+                return loaded;
+            }
+
+            return null;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            MessageBox.Show($"Erreur image {cheminRelatif}: {ex.Message}");
             return null;
         }
     }

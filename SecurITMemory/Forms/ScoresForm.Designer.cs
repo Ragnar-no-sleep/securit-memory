@@ -28,10 +28,13 @@ partial class ScoresForm
 
         listView.View = View.Details;
         listView.FullRowSelect = true;
-        listView.GridLines = true;
+        listView.GridLines = false;
         listView.Location = new Point(20, 65);
         listView.Size = new Size(560, 380);
         listView.Font = new Font("Segoe UI", 10F);
+        listView.BackColor = Color.FromArgb(20, 18, 38);
+        listView.ForeColor = Color.Gainsboro;
+        listView.BorderStyle = BorderStyle.None;
         listView.Columns.Add("Joueur", 130);
         listView.Columns.Add("Plateau", 90);
         listView.Columns.Add("Essais", 70);
