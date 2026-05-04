@@ -102,6 +102,26 @@ public class JeuMemory
         ReinitialiserSelection();
     }
 
+    // Mode Hardcore : permute aleatoirement les positions des cartes encore Cachee.
+    // On laisse les Revelee (essai en cours) et les Trouvee tranquilles, sinon on embete
+    // le joueur en plein milieu d'un essai ou on devoile a nouveau une paire validee.
+    public void MelangerCachees()
+    {
+        var indices = new List<int>();
+        for (int i = 0; i < _cartes.Count; i++)
+            if (_cartes[i].Etat == EtatCarte.Cachee)
+                indices.Add(i);
+
+        var rng = Random.Shared;
+        for (int i = indices.Count - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            int ai = indices[i];
+            int aj = indices[j];
+            (_cartes[ai], _cartes[aj]) = (_cartes[aj], _cartes[ai]);
+        }
+    }
+
     private void ReinitialiserSelection()
     {
         _premiereSelection = null;
