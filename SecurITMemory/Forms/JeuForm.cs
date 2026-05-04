@@ -5,16 +5,18 @@ namespace SecurITMemory.Forms;
 public partial class JeuForm : Form
 {
     private readonly JeuMemory _jeu;
+    private readonly Theme _theme;
     private readonly Dictionary<PictureBox, Carte> _liaisons = new();
     private readonly System.Windows.Forms.Timer _timerDelai;
     private readonly System.Windows.Forms.Timer _chronometre;
     private DateTime _debutPartie;
 
-    public JeuForm(int taillePlateau)
+    public JeuForm(int taillePlateau, Theme theme)
     {
         InitializeComponent();
 
-        _jeu = new JeuMemory(taillePlateau, BibliothequeImages.ImagesCyber);
+        _theme = theme;
+        _jeu = new JeuMemory(taillePlateau, BibliothequeImages.Images(theme));
 
         _timerDelai = new System.Windows.Forms.Timer { Interval = 1200 };
         _timerDelai.Tick += TimerDelai_Tick;
@@ -129,7 +131,7 @@ public partial class JeuForm : Form
     private void AfficherCarte(PictureBox pb, Carte carte)
     {
         string chemin = carte.Etat == EtatCarte.Cachee
-            ? BibliothequeImages.DosCarte
+            ? BibliothequeImages.Dos(_theme)
             : carte.CheminImage;
 
         pb.Image = ChargerImage(chemin);
@@ -202,7 +204,8 @@ public partial class JeuForm : Form
             Joueur = string.IsNullOrWhiteSpace(nom) ? "Anonyme" : nom.Trim(),
             TaillePlateau = _jeu.TaillePlateau,
             Essais = _jeu.NombreEssais,
-            TempsSecondes = (int)ecoule.TotalSeconds
+            TempsSecondes = (int)ecoule.TotalSeconds,
+            Theme = _theme.ToString()
         });
 
         MessageBox.Show(

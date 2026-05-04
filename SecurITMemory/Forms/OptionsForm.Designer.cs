@@ -7,6 +7,8 @@ partial class OptionsForm
     private RadioButton rbPetit;
     private RadioButton rbMoyen;
     private RadioButton rbGrand;
+    private Label lblTheme;
+    private ComboBox cbTheme;
     private Button btnValider;
     private Button btnAnnuler;
 
@@ -22,23 +24,36 @@ partial class OptionsForm
         rbPetit = new RadioButton();
         rbMoyen = new RadioButton();
         rbGrand = new RadioButton();
+        lblTheme = new Label();
+        cbTheme = new ComboBox();
         btnValider = new Button();
         btnAnnuler = new Button();
         SuspendLayout();
 
-        lblTitre.Text = "Choisissez la taille du plateau";
+        lblTitre.Text = "Options de partie";
         lblTitre.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
         lblTitre.ForeColor = Color.Gainsboro;
         lblTitre.AutoSize = true;
         lblTitre.Location = new Point(30, 25);
 
-        StyliserRadio(rbPetit, "Facile — 4 × 4 (8 paires)", 80);
-        StyliserRadio(rbMoyen, "Moyen — 6 × 4 (12 paires)", 130);
-        StyliserRadio(rbGrand, "Difficile — 6 × 6 (18 paires)", 180);
+        StyliserRadio(rbPetit, "Facile - 4 x 4 (8 paires)", 80);
+        StyliserRadio(rbMoyen, "Moyen - 6 x 4 (12 paires)", 130);
+        StyliserRadio(rbGrand, "Difficile - 6 x 6 (18 paires)", 180);
+
+        lblTheme.Text = "Theme de cartes :";
+        lblTheme.Font = new Font("Segoe UI", 11F);
+        lblTheme.ForeColor = Color.Gainsboro;
+        lblTheme.AutoSize = true;
+        lblTheme.Location = new Point(50, 240);
+
+        cbTheme.Location = new Point(50, 270);
+        cbTheme.Size = new Size(330, 28);
+        cbTheme.DropDownStyle = ComboBoxStyle.DropDownList;
+        cbTheme.Font = new Font("Segoe UI", 10F);
 
         btnValider.Text = "Valider";
         btnValider.Size = new Size(120, 38);
-        btnValider.Location = new Point(80, 250);
+        btnValider.Location = new Point(80, 330);
         btnValider.BackColor = Color.FromArgb(95, 75, 180);
         btnValider.ForeColor = Color.White;
         btnValider.FlatStyle = FlatStyle.Flat;
@@ -47,7 +62,7 @@ partial class OptionsForm
 
         btnAnnuler.Text = "Annuler";
         btnAnnuler.Size = new Size(120, 38);
-        btnAnnuler.Location = new Point(220, 250);
+        btnAnnuler.Location = new Point(220, 330);
         btnAnnuler.BackColor = Color.FromArgb(60, 55, 90);
         btnAnnuler.ForeColor = Color.White;
         btnAnnuler.FlatStyle = FlatStyle.Flat;
@@ -56,11 +71,13 @@ partial class OptionsForm
 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(420, 320);
+        ClientSize = new Size(420, 400);
         Controls.Add(lblTitre);
         Controls.Add(rbPetit);
         Controls.Add(rbMoyen);
         Controls.Add(rbGrand);
+        Controls.Add(lblTheme);
+        Controls.Add(cbTheme);
         Controls.Add(btnValider);
         Controls.Add(btnAnnuler);
         BackColor = Color.FromArgb(20, 18, 38);
