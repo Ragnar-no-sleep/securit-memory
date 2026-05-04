@@ -6,6 +6,7 @@ public partial class MenuForm : Form
 {
     private int _taillePlateau = 16;
     private Theme _theme = Theme.Cybersecurite;
+    private bool _hardcore;
 
     public MenuForm()
     {
@@ -14,7 +15,7 @@ public partial class MenuForm : Form
 
     private void btnJouer_Click(object sender, EventArgs e)
     {
-        using var jeu = new JeuForm(_taillePlateau, _theme);
+        using var jeu = new JeuForm(_taillePlateau, _theme, _hardcore);
         Hide();
         jeu.ShowDialog(this);
         Show();
@@ -22,11 +23,12 @@ public partial class MenuForm : Form
 
     private void btnOptions_Click(object sender, EventArgs e)
     {
-        using var options = new OptionsForm(_taillePlateau, _theme);
+        using var options = new OptionsForm(_taillePlateau, _theme, _hardcore);
         if (options.ShowDialog(this) == DialogResult.OK)
         {
             _taillePlateau = options.TailleChoisie;
             _theme = options.ThemeChoisi;
+            _hardcore = options.HardcoreActif;
         }
     }
 

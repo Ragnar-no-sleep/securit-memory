@@ -6,16 +6,19 @@ public partial class JeuForm : Form
 {
     private readonly JeuMemory _jeu;
     private readonly Theme _theme;
+    private readonly bool _hardcore;
     private readonly Dictionary<PictureBox, Carte> _liaisons = new();
     private readonly System.Windows.Forms.Timer _timerDelai;
     private readonly System.Windows.Forms.Timer _chronometre;
+    private readonly System.Windows.Forms.Timer? _timerHardcore;
     private DateTime _debutPartie;
 
-    public JeuForm(int taillePlateau, Theme theme)
+    public JeuForm(int taillePlateau, Theme theme, bool hardcore)
     {
         InitializeComponent();
 
         _theme = theme;
+        _hardcore = hardcore;
         _jeu = new JeuMemory(taillePlateau, BibliothequeImages.Images(theme));
 
         _timerDelai = new System.Windows.Forms.Timer { Interval = 1200 };
@@ -23,6 +26,12 @@ public partial class JeuForm : Form
 
         _chronometre = new System.Windows.Forms.Timer { Interval = 1000 };
         _chronometre.Tick += Chronometre_Tick;
+
+        if (_hardcore)
+        {
+            _timerHardcore = new System.Windows.Forms.Timer { Interval = 30_000 };
+            _timerHardcore.Tick += TimerHardcore_Tick;
+        }
 
         ConstruireGrille();
         DemarrerPartie();
@@ -32,6 +41,7 @@ public partial class JeuForm : Form
     {
         _debutPartie = DateTime.Now;
         _chronometre.Start();
+        _timerHardcore?.Start();
         MettreAJourCompteurs();
     }
 
@@ -43,6 +53,7 @@ public partial class JeuForm : Form
 
         panelGrille.SuspendLayout();
         panelGrille.Controls.Clear();
+        _liaisons.Clear();
         panelGrille.ColumnCount = colonnes;
         panelGrille.RowCount = lignes;
         panelGrille.ColumnStyles.Clear();
@@ -128,6 +139,17 @@ public partial class JeuForm : Form
 
     private void Chronometre_Tick(object? sender, EventArgs e) => MettreAJourCompteurs();
 
+    // Mode Hardcore : toutes les 30s on permute les positions des cartes encore cachees
+    // et on reconstruit la grille pour refleter le melange.
+    // On saute le tick si le joueur est en plein essai (deux cartes revelees), sinon
+    // on lui retire les cartes des yeux au pire moment.
+    private void TimerHardcore_Tick(object? sender, EventArgs e)
+    {
+        if (_jeu.AttenteRetournement) return;
+        _jeu.MelangerCachees();
+        ConstruireGrille();
+    }
+
     private void RafraichirToutesLesCartes()
     {
         foreach (var (pb, carte) in _liaisons) AfficherCarte(pb, carte);
@@ -201,6 +223,7 @@ public partial class JeuForm : Form
     private void AfficherVictoire()
     {
         _chronometre.Stop();
+        _timerHardcore?.Stop();
         Sons.Jouer(Sons.Victoire);
         var ecoule = DateTime.Now - _debutPartie;
 
@@ -211,7 +234,8 @@ public partial class JeuForm : Form
             TaillePlateau = _jeu.TaillePlateau,
             Essais = _jeu.NombreEssais,
             TempsSecondes = (int)ecoule.TotalSeconds,
-            Theme = _theme.ToString()
+            Theme = _theme.ToString(),
+            Hardcore = _hardcore
         });
 
         MessageBox.Show(
@@ -265,8 +289,10 @@ public partial class JeuForm : Form
     {
         _timerDelai.Stop();
         _chronometre.Stop();
+        _timerHardcore?.Stop();
         _timerDelai.Dispose();
         _chronometre.Dispose();
+        _timerHardcore?.Dispose();
         base.OnFormClosed(e);
     }
 }

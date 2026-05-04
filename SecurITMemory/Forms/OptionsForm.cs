@@ -6,14 +6,17 @@ public partial class OptionsForm : Form
 {
     public int TailleChoisie { get; private set; }
     public Theme ThemeChoisi { get; private set; }
+    public bool HardcoreActif { get; private set; }
 
-    public OptionsForm(int tailleActuelle, Theme themeActuel)
+    public OptionsForm(int tailleActuelle, Theme themeActuel, bool hardcoreActuel)
     {
         InitializeComponent();
         TailleChoisie = tailleActuelle;
         ThemeChoisi = themeActuel;
+        HardcoreActif = hardcoreActuel;
         SelectionnerRadio(tailleActuelle);
         SelectionnerTheme(themeActuel);
+        cbHardcore.Checked = hardcoreActuel;
     }
 
     private void SelectionnerRadio(int taille)
@@ -38,6 +41,7 @@ public partial class OptionsForm : Form
         else TailleChoisie = 16;
 
         ThemeChoisi = (Theme)cbTheme.SelectedIndex;
+        HardcoreActif = cbHardcore.Checked;
 
         DialogResult = DialogResult.OK;
         Close();

@@ -9,6 +9,7 @@ partial class OptionsForm
     private RadioButton rbGrand;
     private Label lblTheme;
     private ComboBox cbTheme;
+    private CheckBox cbHardcore;
     private Button btnValider;
     private Button btnAnnuler;
 
@@ -26,6 +27,7 @@ partial class OptionsForm
         rbGrand = new RadioButton();
         lblTheme = new Label();
         cbTheme = new ComboBox();
+        cbHardcore = new CheckBox();
         btnValider = new Button();
         btnAnnuler = new Button();
         SuspendLayout();
@@ -51,9 +53,15 @@ partial class OptionsForm
         cbTheme.DropDownStyle = ComboBoxStyle.DropDownList;
         cbTheme.Font = new Font("Segoe UI", 10F);
 
+        cbHardcore.Text = "Mode Hardcore (melange toutes les 30s)";
+        cbHardcore.AutoSize = true;
+        cbHardcore.Location = new Point(50, 320);
+        cbHardcore.Font = new Font("Segoe UI", 11F);
+        cbHardcore.ForeColor = Color.FromArgb(220, 100, 120);
+
         btnValider.Text = "Valider";
         btnValider.Size = new Size(120, 38);
-        btnValider.Location = new Point(80, 330);
+        btnValider.Location = new Point(80, 370);
         btnValider.BackColor = Color.FromArgb(95, 75, 180);
         btnValider.ForeColor = Color.White;
         btnValider.FlatStyle = FlatStyle.Flat;
@@ -62,7 +70,7 @@ partial class OptionsForm
 
         btnAnnuler.Text = "Annuler";
         btnAnnuler.Size = new Size(120, 38);
-        btnAnnuler.Location = new Point(220, 330);
+        btnAnnuler.Location = new Point(220, 370);
         btnAnnuler.BackColor = Color.FromArgb(60, 55, 90);
         btnAnnuler.ForeColor = Color.White;
         btnAnnuler.FlatStyle = FlatStyle.Flat;
@@ -71,13 +79,14 @@ partial class OptionsForm
 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(420, 400);
+        ClientSize = new Size(420, 440);
         Controls.Add(lblTitre);
         Controls.Add(rbPetit);
         Controls.Add(rbMoyen);
         Controls.Add(rbGrand);
         Controls.Add(lblTheme);
         Controls.Add(cbTheme);
+        Controls.Add(cbHardcore);
         Controls.Add(btnValider);
         Controls.Add(btnAnnuler);
         BackColor = Color.FromArgb(20, 18, 38);
