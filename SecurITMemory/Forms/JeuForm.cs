@@ -102,14 +102,19 @@ public partial class JeuForm : Form
         AfficherCarte(pb, carte);
         MettreAJourCompteurs();
 
-        if (resultat == ResultatSelection.PaireTrouvee)
+        if (resultat == ResultatSelection.PremiereCarte)
         {
-            System.Media.SystemSounds.Asterisk.Play(); // Petit son de succès
+            Sons.Jouer(Sons.Clic);
+        }
+        else if (resultat == ResultatSelection.PaireTrouvee)
+        {
+            Sons.Jouer(Sons.Succes);
             RafraichirToutesLesCartes();
             if (_jeu.EstTermine) AfficherVictoire();
         }
         else if (resultat == ResultatSelection.PaireRatee)
         {
+            Sons.Jouer(Sons.Echec);
             _timerDelai.Start();
         }
     }
@@ -196,6 +201,7 @@ public partial class JeuForm : Form
     private void AfficherVictoire()
     {
         _chronometre.Stop();
+        Sons.Jouer(Sons.Victoire);
         var ecoule = DateTime.Now - _debutPartie;
 
         string nom = DemanderNomJoueur();
